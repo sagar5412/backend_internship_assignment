@@ -29,3 +29,9 @@ export const updateTaskSchema = Joi.object({
     status:Joi.string().valid("PENDING","IN_PROGRESS","COMPLETED").optional(),
     priority:Joi.string().valid("LOW","MEDIUM","HIGH").optional(),
 }).min(1);
+
+export const roleSchema = Joi.object({
+    role: Joi.string()
+        .valid("USER", "ADMIN")
+        .required()
+});

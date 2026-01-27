@@ -13,7 +13,7 @@ router.use(protect);
 router.get("/",validate(taskQuerySchema),getAllTasks);
 router.get("/:id",validateParams(idParamSchema),getTask);
 router.post("/",validate(createTaskSchema),createTask);
-router.put("/:id",validate(updateTaskSchema),updateTask);
-router.put("/:id/delete",validateParams(idParamSchema),deleteTask)
+router.patch("/:id",validate(updateTaskSchema),updateTask);
+router.delete("/:id",validateParams(idParamSchema),deleteTask)
 
 export default router

@@ -3,7 +3,7 @@ import { asyncHandler } from "../middleware/asyncHandler.js";
 
 // Verify User
 function verifyUser(req,task){
-    if (req.user.role !== "ADMIN" && task.userId !== req.user) {
+    if (req.user.role !== "ADMIN" && task.userId !== req.user.id) {
         return res.status(403).json({
             success: false,
             message: "Not authorized to access this task"
@@ -24,7 +24,7 @@ export const getAllTasks = asyncHandler(async (req, res) => {
     };
 
     if (req.user.role !== "ADMIN") {
-        where.userId = req.user;
+        where.userId = req.user.id;
     }
     
     if (status && ["PENDING", "IN_PROGRESS", "COMPLETED"].includes(status.toUpperCase())) {
@@ -99,7 +99,7 @@ export const createTask = asyncHandler(async (req, res) => {
             description,
             status: status || "PENDING",
             priority: priority || "MEDIUM",
-            userId: req.user
+            userId: req.user.id
         },
         include: {
             user: {

@@ -4,7 +4,7 @@ import { asyncHandler } from "./asyncHandler.js"
 
 export const protect = asyncHandler(async(req,res,next)=>{
     let token;
-    if(!req.headers.authorization && !req.headers.authorization.startsWith("Bearer")){
+    if(!req.headers.authorization){
         return res.status(401).json({
             success:false,
             message:"No Token Provided"
@@ -41,6 +41,17 @@ export const protect = asyncHandler(async(req,res,next)=>{
             message:"Not Authorized"
         })
     }
-    req.user= user.id;
+    req.user= user;
     next();
 })
+
+// admin only
+export const adminOnly = (req, res, next) => {
+    if (req.user.role !== "ADMIN") {
+        return res.status(403).json({
+            success: false,
+            message: "Admin access required"
+        });
+    }
+    next();
+};
