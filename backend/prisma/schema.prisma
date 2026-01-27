@@ -18,6 +18,7 @@ model User{
   name String
   email String @unique
   password String
+  isDeleted Boolean @default(false)
   role Role @default(USER)
   tasks Task[]
   createdAt DateTime @default(now())
@@ -30,6 +31,7 @@ model Task{
   description String
   status Status @default(PENDING)
   priority Priority @default(MEDIUM)
+  isDeleted Boolean @default(false)
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

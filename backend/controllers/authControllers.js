@@ -87,3 +87,10 @@ export const login = asyncHandler(async(req,res)=>{
         }
     })
 })
+
+export const me = asyncHandler(async(req,res)=>{
+    return res.status(200).json({
+        success:true,
+        data:req.user
+    })
+})

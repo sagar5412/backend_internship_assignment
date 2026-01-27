@@ -22,3 +22,19 @@ export const validate = (schema) => {
         next();
     }
 }
+
+export const validateParams = (schema) => {
+  return (req, res, next) => {
+    const { error, value } = schema.validate(req.params, {
+      abortEarly: false
+    });
+    if (error) {
+      return res.status(400).json({ 
+        success: false,
+        message: error.details[0].message 
+      });
+    }
+    req.params = value;
+    next();
+  };
+};

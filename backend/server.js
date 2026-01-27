@@ -3,7 +3,7 @@ import cors from "cors"
 
 // import routes
 import authRoutes from "./routes/v1/authRoutes.js"
-
+import taskRoutes from "./routes/v1/taskRoutes.js"
 // initialize express app
 const app = express();
 
@@ -17,6 +17,7 @@ app.use(express.urlencoded({extended:true}))
 
 // API Routes
 app.use("/api/v1/auth",authRoutes);
+app.use("/api/v1/tasks",taskRoutes);
 
 // 404 handler
 app.use((req,res)=>{
