@@ -11,7 +11,18 @@ const generateToken = (id) => {
 };
 
 export const register = asyncHandler(async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, adminCode } = req.body;
+
+  // Admin registration security check
+  if (role === "ADMIN") {
+    const secretCode = process.env.ADMIN_REGISTRATION_CODE || "admin123";
+    if (adminCode !== secretCode) {
+      return res.status(403).json({
+        success: false,
+        message: "Invalid Admin Registration Code",
+      });
+    }
+  }
 
   const existingUser = await prisma.user.findUnique({
     where: { email },
