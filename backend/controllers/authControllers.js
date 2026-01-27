@@ -4,8 +4,9 @@ import prisma from "../lib/prisma.js"
 import { asyncHandler } from "../middleware/asyncHandler.js"
 
 const generateToken = (id)=>{
-    return jwt.sign({id},process.env.SECRET,{
-        expiresIn:process.env.JWT_EXPIRE || "24h"
+    const secret = process.env.JWT_SECRET;
+    return jwt.sign({id}, secret, {
+        expiresIn: process.env.JWT_EXPIRE || "24h"
     });
 }
 
