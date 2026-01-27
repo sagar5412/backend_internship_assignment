@@ -1,8 +1,19 @@
-import express from "express"
+import express from "express";
 import { protect } from "../../middleware/auth.js";
-import { createTaskSchema, idParamSchema, taskQuerySchema, updateTaskSchema } from "../../validators/taskValidators.js";
-import { createTask, deleteTask, getAllTasks,getTask, updateTask } from "../../controllers/taskControllers.js";
-import { validate,validateParams } from "../../middleware/validate.js";
+import {
+  createTaskSchema,
+  idParamSchema,
+  taskQuerySchema,
+  updateTaskSchema,
+} from "../../validators/taskValidators.js";
+import {
+  createTask,
+  deleteTask,
+  getAllTasks,
+  getTask,
+  updateTask,
+} from "../../controllers/taskControllers.js";
+import { validate, validateParams } from "../../middleware/validate.js";
 
 const router = express.Router();
 
@@ -10,10 +21,15 @@ const router = express.Router();
 router.use(protect);
 
 // Task Routes
-router.get("/",validate(taskQuerySchema),getAllTasks);
-router.get("/:id",validateParams(idParamSchema),getTask);
-router.post("/",validate(createTaskSchema),createTask);
-router.patch("/:id",validate(updateTaskSchema),updateTask);
-router.delete("/:id",validateParams(idParamSchema),deleteTask)
+router.get("/", validate(taskQuerySchema), getAllTasks);
+router.get("/:id", validateParams(idParamSchema), getTask);
+router.post("/", validate(createTaskSchema), createTask);
+router.patch(
+  "/:id",
+  validateParams(idParamSchema),
+  validate(updateTaskSchema),
+  updateTask,
+);
+router.delete("/:id", validateParams(idParamSchema), deleteTask);
 
-export default router
+export default router;
