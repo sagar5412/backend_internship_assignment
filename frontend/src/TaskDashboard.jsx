@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Filter } from "lucide-react";
+import toast from "react-hot-toast";
 import api from "./services/api";
 import TaskCard from "./components/TaskCard";
 import TaskModal from "./components/TaskModal";
@@ -20,6 +21,7 @@ const TaskDashboard = () => {
       }
     } catch (error) {
       console.error("Failed to fetch tasks", error);
+      toast.error("Failed to load tasks");
     } finally {
       setLoading(false);
     }
@@ -44,8 +46,9 @@ const TaskDashboard = () => {
       try {
         await api.delete(`/tasks/${taskId}`);
         setTasks(tasks.filter((t) => t.id !== taskId));
+        toast.success("Task deleted successfully");
       } catch (error) {
-        alert("Failed to delete task");
+        toast.error("Failed to delete task");
       }
     }
   };
@@ -61,17 +64,19 @@ const TaskDashboard = () => {
               t.id === editingTask.id ? response.data.data : t,
             ),
           );
+          toast.success("Task updated successfully");
         }
       } else {
         // Create
         const response = await api.post("/tasks", formData);
         if (response.data.success) {
           setTasks([response.data.data, ...tasks]);
+          toast.success("Task created successfully");
         }
       }
       setIsModalOpen(false);
     } catch (error) {
-      alert(error.response?.data?.message || "Operation failed");
+      toast.error(error.response?.data?.message || "Operation failed");
     }
   };
 

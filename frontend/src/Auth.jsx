@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import api from "./services/api";
 import "./Auth.css";
 
@@ -11,8 +12,6 @@ const Auth = () => {
     role: "USER",
     adminCode: "",
   });
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -23,8 +22,6 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setMessage("");
 
     try {
       const endpoint = isLogin ? "/auth/login" : "/auth/register";
@@ -33,14 +30,15 @@ const Auth = () => {
       if (response.data.success) {
         if (isLogin) {
           localStorage.setItem("token", response.data.data.token);
+          toast.success("Successfully logged in!");
           window.location.href = "/"; // Refresh to trigger auth check or redirect
         } else {
-          setMessage("Registration successful! Please login.");
+          toast.success("Registration successful! Please login.");
           setIsLogin(true);
         }
       }
     } catch (err) {
-      setError(
+      toast.error(
         err.response?.data?.message || "An error occurred. Please try again.",
       );
     } finally {
@@ -59,9 +57,6 @@ const Auth = () => {
               : "Join our task management community"}
           </p>
         </div>
-
-        {error && <div className="errorMsg">{error}</div>}
-        {message && <div className="successMsg">{message}</div>}
 
         <form onSubmit={handleSubmit}>
           {!isLogin && (

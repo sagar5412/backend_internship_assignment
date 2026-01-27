@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Auth from "./Auth";
 import Navbar from "./components/Navbar";
+import { Toaster } from "react-hot-toast";
 import api from "./services/api";
 import TaskDashboard from "./TaskDashboard";
 import "./App.css";
@@ -59,6 +60,7 @@ function App() {
   return (
     <Router>
       <div className="app">
+        <Toaster position="top-center" />
         <Navbar user={user} onLogout={handleLogout} />
         <main>
           <Routes>
