@@ -8,6 +8,7 @@ import {
 import Auth from "./Auth";
 import Navbar from "./components/Navbar";
 import api from "./services/api";
+import TaskDashboard from "./TaskDashboard";
 import "./App.css";
 
 function App() {
@@ -63,15 +64,7 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={
-                user ? (
-                  <div>
-                    Welcome to Dashboard, {user.name}! (Tasks coming soon)
-                  </div>
-                ) : (
-                  <Navigate to="/auth" />
-                )
-              }
+              element={user ? <TaskDashboard /> : <Navigate to="/auth" />}
             />
             <Route
               path="/auth"
