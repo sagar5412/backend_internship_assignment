@@ -11,11 +11,12 @@ const generateToken = (id) => {
 };
 
 export const register = asyncHandler(async (req, res) => {
-  const { name, email, password, role, adminCode } = req.body;
+  const { name, email, password, role } = req.body;
 
   // Admin registration security check
   if (role === "ADMIN") {
     const secretCode = process.env.ADMIN_REGISTRATION_CODE || "admin123";
+    const adminCode = req.body.adminCode || "";
     if (adminCode !== secretCode) {
       return res.status(403).json({
         success: false,
