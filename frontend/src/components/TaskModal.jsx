@@ -70,7 +70,7 @@ const TaskModal = ({ isOpen, onClose, onSubmit, initialData }) => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              maxLength={100}
+              maxLength={1000}
               rows={3}
               style={{
                 width: "100%",

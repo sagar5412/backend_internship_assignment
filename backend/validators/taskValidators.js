@@ -17,7 +17,7 @@ export const createTaskSchema = Joi.object({
     "string.max": "Title cannot exceed 50 characters",
     "any.required": "Title is required",
   }),
-  description: Joi.string().max(100).allow("").optional(),
+  description: Joi.string().max(1000).allow("").optional(),
   status: Joi.string()
     .valid("PENDING", "IN_PROGRESS", "COMPLETED")
     .default("PENDING"),
@@ -26,7 +26,7 @@ export const createTaskSchema = Joi.object({
 
 export const updateTaskSchema = Joi.object({
   title: Joi.string().min(3).max(50).optional(),
-  description: Joi.string().max(100).allow("").optional(),
+  description: Joi.string().max(1000).allow("").optional(),
   status: Joi.string().valid("PENDING", "IN_PROGRESS", "COMPLETED").optional(),
   priority: Joi.string().valid("LOW", "MEDIUM", "HIGH").optional(),
 }).min(1);

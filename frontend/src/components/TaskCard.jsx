@@ -24,7 +24,17 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
         </div>
       </div>
 
-      <div className="task-desc">
+      <div
+        className="task-desc"
+        style={{
+          wordBreak: "break-word",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          display: "-webkit-box",
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: "vertical",
+        }}
+      >
         {task.description || "No description provided."}
       </div>
 
