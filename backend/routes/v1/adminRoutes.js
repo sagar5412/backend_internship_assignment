@@ -4,6 +4,7 @@ import {
   idParamSchema,
   roleSchema,
   taskQuerySchema,
+  adminUserQuerySchema,
 } from "../../validators/taskValidators.js";
 import { validate, validateParams } from "../../middleware/validate.js";
 import {
@@ -11,11 +12,17 @@ import {
   getUser,
   deleteUser,
   permanentDeleteUser,
+  restoreUser,
   updateUserRole,
   permanentDeleteTask,
   restoreTask,
   getDeletedTasks,
 } from "../../controllers/adminControllers.js";
+
+import {
+  getAllTasks,
+  deleteTask as softDeleteTask,
+} from "../../controllers/taskControllers.js";
 
 const router = express.Router();
 
@@ -33,11 +40,16 @@ router.use(adminOnly);
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: isDeleted
+ *         schema: { type: boolean }
+ *         description: Filter by deleted status
  *     responses:
  *       200:
  *         description: List of users
  */
-router.get("/users", validate(taskQuerySchema), getAllUsers);
+router.get("/users", validate(adminUserQuerySchema), getAllUsers);
 
 /**
  * @swagger
@@ -102,6 +114,25 @@ router.delete(
 
 /**
  * @swagger
+ * /api/v1/admin/user/{id}/restore:
+ *   patch:
+ *     summary: Restore a soft-deleted user (Admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       200:
+ *         description: User restored
+ */
+router.patch("/user/:id/restore", validateParams(idParamSchema), restoreUser);
+
+/**
+ * @swagger
  * /api/v1/admin/user/{id}/role:
  *   patch:
  *     summary: Update user role (Admin only)
@@ -134,6 +165,20 @@ router.patch(
 );
 
 // Task Management
+/**
+ * @swagger
+ * /api/v1/admin/tasks:
+ *   get:
+ *     summary: Get all active tasks (Admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all active tasks
+ */
+router.get("/tasks", validate(taskQuerySchema), getAllTasks);
+
 /**
  * @swagger
  * /api/v1/admin/tasks/deleted:
@@ -171,6 +216,25 @@ router.patch("/task/:id", validateParams(idParamSchema), restoreTask);
  * @swagger
  * /api/v1/admin/task/{id}:
  *   delete:
+ *     summary: Soft delete a task (Admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       200:
+ *         description: Task soft deleted
+ */
+router.delete("/task/:id", validateParams(idParamSchema), softDeleteTask);
+
+/**
+ * @swagger
+ * /api/v1/admin/task/{id}/permanent:
+ *   delete:
  *     summary: Permanently delete a task (Admin only)
  *     tags: [Admin]
  *     security:
@@ -184,6 +248,10 @@ router.patch("/task/:id", validateParams(idParamSchema), restoreTask);
  *       200:
  *         description: Task permanently deleted
  */
-router.delete("/task/:id", validateParams(idParamSchema), permanentDeleteTask);
+router.delete(
+  "/task/:id/permanent",
+  validateParams(idParamSchema),
+  permanentDeleteTask,
+);
 
 export default router;

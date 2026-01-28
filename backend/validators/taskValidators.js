@@ -12,9 +12,9 @@ export const idParamSchema = Joi.object({
 });
 
 export const createTaskSchema = Joi.object({
-  title: Joi.string().min(3).max(15).required().messages({
+  title: Joi.string().min(3).max(50).required().messages({
     "string.min": "Title must be at least 3 characters",
-    "string.max": "Title cannot exceed 15 characters",
+    "string.max": "Title cannot exceed 50 characters",
     "any.required": "Title is required",
   }),
   description: Joi.string().max(100).allow("").optional(),
@@ -25,7 +25,7 @@ export const createTaskSchema = Joi.object({
 });
 
 export const updateTaskSchema = Joi.object({
-  title: Joi.string().min(3).max(15).optional(),
+  title: Joi.string().min(3).max(50).optional(),
   description: Joi.string().max(100).allow("").optional(),
   status: Joi.string().valid("PENDING", "IN_PROGRESS", "COMPLETED").optional(),
   priority: Joi.string().valid("LOW", "MEDIUM", "HIGH").optional(),
@@ -33,4 +33,10 @@ export const updateTaskSchema = Joi.object({
 
 export const roleSchema = Joi.object({
   role: Joi.string().valid("USER", "ADMIN").required(),
+});
+
+export const adminUserQuerySchema = Joi.object({
+  isDeleted: Joi.boolean().optional(),
+  page: Joi.number().integer().min(1).default(1),
+  limit: Joi.number().integer().min(1).max(100).default(10),
 });

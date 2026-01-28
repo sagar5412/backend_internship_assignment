@@ -59,7 +59,7 @@ const TaskModal = ({ isOpen, onClose, onSubmit, initialData }) => {
               onChange={handleChange}
               required
               minLength={3}
-              maxLength={15}
+              maxLength={50}
             />
           </div>
 

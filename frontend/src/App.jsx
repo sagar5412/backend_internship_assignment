@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import { Toaster } from "react-hot-toast";
 import api from "./services/api";
 import TaskDashboard from "./TaskDashboard";
+import AdminDashboard from "./AdminDashboard";
 import "./App.css";
 
 function App() {
@@ -66,7 +67,17 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={user ? <TaskDashboard /> : <Navigate to="/auth" />}
+              element={
+                user ? (
+                  user.role === "ADMIN" ? (
+                    <AdminDashboard />
+                  ) : (
+                    <TaskDashboard />
+                  )
+                ) : (
+                  <Navigate to="/auth" />
+                )
+              }
             />
             <Route
               path="/auth"

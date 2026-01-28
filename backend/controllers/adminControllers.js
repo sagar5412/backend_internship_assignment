@@ -6,8 +6,17 @@ export const getAllUsers = asyncHandler(async (req, res) => {
   const page = Math.max(1, parseInt(req.query.page) || 1);
   const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
   const skip = (page - 1) * limit;
+
+  const where = {};
+  if (req.query.isDeleted !== undefined) {
+    where.isDeleted = req.query.isDeleted === "true";
+  } else {
+    where.isDeleted = false;
+  }
+
   const [users, total] = await Promise.all([
     prisma.user.findMany({
+      where,
       skip,
       take: limit,
       orderBy: { createdAt: "desc" },
@@ -22,7 +31,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
         _count: { select: { tasks: true } },
       },
     }),
-    prisma.user.count(),
+    prisma.user.count({ where }),
   ]);
   return res.status(200).json({
     success: true,
@@ -258,5 +267,38 @@ export const restoreTask = asyncHandler(async (req, res) => {
     success: true,
     message: "Task restored",
     data: task,
+  });
+});
+
+// RESTORE SOFT DELETED USER
+export const restoreUser = asyncHandler(async (req, res) => {
+  const userId = req.params.id;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  // Restore user and their tasks
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: userId },
+      data: { isDeleted: false },
+    }),
+    prisma.task.updateMany({
+      where: { userId, isDeleted: true },
+      data: { isDeleted: false },
+    }),
+  ]);
+
+  return res.status(200).json({
+    success: true,
+    message: "User restored successfully",
   });
 });
