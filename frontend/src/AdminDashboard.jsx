@@ -106,7 +106,7 @@ const AdminDashboard = () => {
   const handlePermanentDeleteTask = async (id) => {
     if (window.confirm("Permanently delete this task?")) {
       try {
-        await api.delete(`/admin/task/${id}`);
+        await api.delete(`/admin/task/${id}/permanent`);
         setDeletedTasks(deletedTasks.filter((t) => t.id !== id));
         toast.success("Task permanently deleted");
       } catch (error) {
