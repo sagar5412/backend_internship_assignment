@@ -1,6 +1,6 @@
 # Backend Developer Intern Assignment
 
-**Submitted by:** [Your Name]
+**Submitted by:** G K Sagar
 **Role:** Backend Developer Intern
 
 ---
